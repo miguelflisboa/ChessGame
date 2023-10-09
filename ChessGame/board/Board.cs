@@ -4,7 +4,7 @@ namespace board
 {
     internal class Board
     {
-        public int lines {  get; set; }
+        public int lines { get; set; }
         public int columns { get; set; }
         private Piece[,] piecesOnBoard;
 
@@ -20,10 +20,43 @@ namespace board
             return piecesOnBoard[line, column];
         }
 
-        public void alocatePiece (Piece p, Position pos)
+        public Piece piece(Position pos)
         {
+            return piecesOnBoard[pos.line, pos.column];
+        }
+
+        public void alocatePiece(Piece p, Position pos)
+        {
+            if (isThereAPiece(pos))
+            {
+                throw new BoardException("There is already a piece!!!!");
+            }
             piecesOnBoard[pos.line, pos.column] = p;
             p.position = pos;
+        }
+
+        public bool isThereAPiece(Position pos)
+        {
+            validatingPosition(pos);
+            return piece(pos.line, pos.column) != null;
+        }
+
+        public bool positionTest(Position pos)
+        {
+            if (pos.line < 0 || pos.line > lines || pos.column < 0 || pos.column > columns)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public void validatingPosition(Position pos)
+        {
+            if(!positionTest(pos))
+            {
+                throw new BoardException("Invalid position!!!!");
+            }
         }
     }
 }

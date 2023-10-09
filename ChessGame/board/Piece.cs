@@ -18,12 +18,5 @@ namespace board
             this.qofMovements = 0;
         }
 
-        public Piece(Position position, Board table, Color color)
-        {
-            this.position = position;
-            this.table = table;
-            this.color = color;
-            this.qofMovements = 0;
-        }
     }
 }

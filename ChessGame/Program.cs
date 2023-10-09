@@ -14,17 +14,24 @@ namespace ChessGame
         {
             try
             {
-                Board board = new Board(8, 8);
+                ChessMatch match = new ChessMatch();
 
-                ChessPosition cp1 = new ChessPosition('a', 8);
-                ChessPosition cp2 = new ChessPosition('b', 6);
+                while(!match.ended)
+                {
+                    Console.Clear();
+                    Screen.printBoard(match.board);
 
-                board.alocatePiece(new Tower(board, Color.Black), cp1.toPosition());
-                //board.alocatePiece(new Tower(board, Color.White), new Position(0, 0));
-                board.alocatePiece(new King(board, Color.White), cp2.toPosition());
+                    Console.WriteLine();
+                    Console.Write("Origin: ");
+                    Position origem = Screen.readChessPosition().toPosition();
+                    Console.Write("Destiny: ");
+                    Position destiny = Screen.readChessPosition().toPosition();
 
+                    match.executeMoviment(origem, destiny);
 
-                Screen.printBoard(board);
+                }
+
+                Screen.printBoard(match.board);
 
             }
             catch (BoardException e)

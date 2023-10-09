@@ -18,5 +18,9 @@ namespace board
             this.qofMovements = 0;
         }
 
+        public void increaseMovements()
+        {
+            this.qofMovements++;
+        }
     }
 }

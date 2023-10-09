@@ -35,6 +35,20 @@ namespace board
             p.position = pos;
         }
 
+        public Piece removePiece(Position pos)
+        {
+            if (!isThereAPiece(pos))
+            {
+                return null;
+            }
+            else
+            {
+                Piece aux = piece(pos);
+                piecesOnBoard[pos.line, pos.column] = null;
+                return aux;
+            }
+        }
+
         public bool isThereAPiece(Position pos)
         {
             validatingPosition(pos);

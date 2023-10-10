@@ -24,10 +24,18 @@ namespace ChessGame
                     Console.WriteLine();
                     Console.Write("Origin: ");
                     Position origem = Screen.readChessPosition().toPosition();
+
+                    bool[,] posiblePositions = match.board.piece(origem).possibleMovements();
+                    
+                    Console.Clear();
+                    Screen.printBoard(match.board, posiblePositions);
+
+                    Console.WriteLine();
                     Console.Write("Destiny: ");
                     Position destiny = Screen.readChessPosition().toPosition();
 
                     match.executeMoviment(origem, destiny);
+                    
 
                 }
 

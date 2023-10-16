@@ -28,6 +28,24 @@ namespace board
             this .qofMovements--;
         }
 
+        public bool thereIsPossibleMovements()
+        {
+            bool[,] movements = possibleMovements();
+            for (int i = 0; i < board.rows; i++)
+            {
+                for (int j = 0; j < board.columns; j++)
+                {
+                    if (movements[i, j]) return true;
+                }
+            }
+            return false;
+        }
+
+        public bool canMoveTo(Position destiny)
+        {
+            return possibleMovements()[destiny.row, destiny.column];
+        }
+
         public abstract bool[,] possibleMovements();
 
     }

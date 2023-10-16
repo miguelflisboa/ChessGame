@@ -18,23 +18,37 @@ namespace ChessGame
 
                 while(!match.ended)
                 {
-                    Console.Clear();
-                    Screen.printBoard(match.board);
+                    try
+                    {
+                        Console.Clear();
+                        Screen.printBoard(match.board);
+                        Console.WriteLine();
+                        Console.WriteLine("Turn: " + match.turn);
+                        Console.WriteLine("Waiting play by: " + match.turnPlayer);
 
-                    Console.WriteLine();
-                    Console.Write("Origin: ");
-                    Position origem = Screen.readChessPosition().toPosition();
+                        Console.WriteLine();
+                        Console.Write("Origin: ");
+                        Position origin = Screen.readChessPosition().toPosition();
+                        match.validateOrigin(origin);
 
-                    bool[,] posiblePositions = match.board.piece(origem).possibleMovements();
+                        bool[,] posiblePositions = match.board.piece(origin).possibleMovements();
+
+                        Console.Clear();
+                        Screen.printBoard(match.board, posiblePositions);
+
+                        Console.WriteLine();
+                        Console.Write("Destiny: ");
+                        Position destiny = Screen.readChessPosition().toPosition();
+                        match.validateDestiny(origin, destiny);
+
+                        match.play(origin, destiny);
+                    }
+                    catch (BoardException e) 
+                    {
+                        Console.WriteLine(e.Message);
+                        Console.ReadLine();
+                    }
                     
-                    Console.Clear();
-                    Screen.printBoard(match.board, posiblePositions);
-
-                    Console.WriteLine();
-                    Console.Write("Destiny: ");
-                    Position destiny = Screen.readChessPosition().toPosition();
-
-                    match.executeMoviment(origem, destiny);
                     
 
                 }

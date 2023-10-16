@@ -9,25 +9,68 @@ namespace chess
     internal class ChessMatch
     {
         public Board board { get; private set; }
-        private int turn;
-        private Color turnPlayer;
+        public int turn { get; private set; }
+        public Color turnPlayer { get; private set; }
         public bool ended { get; private set; }
 
         public ChessMatch()
         {
             board = new Board(8, 8);
-            turn = 0;
+            turn = 1;
             turnPlayer = Color.White;
             ended = false;
             alocatePieces();
         }
 
-        public void executeMoviment(Position origin, Position destine)
+        public void executeMoviment(Position origin, Position destiny)
         {
             Piece chosed = board.removePiece(origin);
-            Piece captured = board.removePiece(destine);
+            Piece captured = board.removePiece(destiny);
             chosed.increaseMovements();
-            board.alocatePiece(chosed, destine);
+            board.alocatePiece(chosed, destiny);
+        }
+
+        public void play(Position origin, Position destiny)
+        {
+            executeMoviment(origin, destiny);
+            turn++;
+            changePlayer();
+        }
+
+        public void validateOrigin(Position origin)
+        {
+            if (board.piece(origin) == null)
+            {
+                throw new BoardException("There is no piece in the chosed origin position!!!");
+            }
+            if (turnPlayer != board.piece(origin).color)
+            {
+                throw new BoardException("The piece chosed isn't yours!!!");
+            }
+            if (!board.piece(origin).thereIsPossibleMovements())
+            {
+                throw new BoardException("There isn't any possible moviments for this piece!!!");
+            }
+        }
+
+        public void validateDestiny(Position origin, Position destiny)
+        {
+            if (!board.piece(origin).canMoveTo(destiny))
+            {
+                throw new BoardException("Destiny invalid!!!");
+            }
+        }
+
+        private void changePlayer()
+        {
+            if(turnPlayer == Color.White)
+            {
+                turnPlayer = Color.Black;
+            }
+            else
+            {
+                turnPlayer = Color.White;
+            }
         }
 
         private void alocatePieces()

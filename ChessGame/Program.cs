@@ -21,10 +21,7 @@ namespace ChessGame
                     try
                     {
                         Console.Clear();
-                        Screen.printBoard(match.board);
-                        Console.WriteLine();
-                        Console.WriteLine("Turn: " + match.turn);
-                        Console.WriteLine("Waiting play by: " + match.turnPlayer);
+                        Screen.printMatch(match);
 
                         Console.WriteLine();
                         Console.Write("Origin: ");

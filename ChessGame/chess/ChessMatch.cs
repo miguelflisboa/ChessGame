@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using board;
 using System.Linq;
 using System.Text;
@@ -12,6 +12,9 @@ namespace chess
         public int turn { get; private set; }
         public Color turnPlayer { get; private set; }
         public bool ended { get; private set; }
+        private HashSet<Piece> piecesOnBoard;
+        private HashSet<Piece> capturedInGame;
+
 
         public ChessMatch()
         {
@@ -19,7 +22,9 @@ namespace chess
             turn = 1;
             turnPlayer = Color.White;
             ended = false;
-            alocatePieces();
+            piecesOnBoard = new HashSet<Piece>();
+            capturedInGame = new HashSet<Piece>();
+            allocatePieces();
         }
 
         public void executeMoviment(Position origin, Position destiny)
@@ -27,7 +32,11 @@ namespace chess
             Piece chosed = board.removePiece(origin);
             Piece captured = board.removePiece(destiny);
             chosed.increaseMovements();
-            board.alocatePiece(chosed, destiny);
+            board.allocatePiece(chosed, destiny);
+            if (captured != null)
+            {
+                capturedInGame.Add(captured);
+            }
         }
 
         public void play(Position origin, Position destiny)
@@ -73,16 +82,43 @@ namespace chess
             }
         }
 
-        private void alocatePieces()
+        public HashSet<Piece> capturedPieces(Color color)
         {
+            HashSet<Piece> aux = new HashSet<Piece>();
+            foreach(Piece x in capturedInGame)
+            {
+                if(x.color == color) aux.Add(x);
+            }
+            return aux;
+        }
 
-            board.alocatePiece(new Tower(board, Color.Black), new ChessPosition('a', 8).toPosition());
-            board.alocatePiece(new Tower(board, Color.Black), new ChessPosition('h', 8).toPosition());
-            board.alocatePiece(new King(board, Color.Black), new ChessPosition('e', 8).toPosition());
+        public HashSet<Piece> piecesInGame(Color color)
+        {
+            HashSet<Piece> aux = new HashSet<Piece>();
+            foreach (Piece x in capturedInGame)
+            {
+                if (x.color != color) aux.Add(x);
+            }
+            aux.ExceptWith(capturedPieces(color));
+            return aux;
+        }
 
-            board.alocatePiece(new Tower(board, Color.White), new ChessPosition('a', 1).toPosition());
-            board.alocatePiece(new Tower(board, Color.White), new ChessPosition('h', 1).toPosition()); 
-            board.alocatePiece(new King(board, Color.White), new ChessPosition('e', 1).toPosition());
+        public void allocateNewPiece(char column, int row, Piece piece)
+        {
+            board.allocatePiece(piece, new ChessPosition(column, row).toPosition());
+            piecesOnBoard.Add(piece);
+        }
+
+        private void allocatePieces()
+        {
+            allocateNewPiece('a', 8, new Tower(board, Color.Black));
+            allocateNewPiece('h', 8, new Tower(board, Color.Black));
+            allocateNewPiece('e', 8, new King(board, Color.Black));
+            
+            allocateNewPiece('a', 1, new Tower(board, Color.White));
+            allocateNewPiece('h', 1, new Tower(board, Color.White));
+            allocateNewPiece('e', 1, new King(board, Color.White));
+            
         }
     }
 }

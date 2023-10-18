@@ -1,11 +1,49 @@
 ﻿using board;
-using System;
+using System.Collections.Generic;
 using chess;
 
 namespace ChessGame
 {
     internal class Screen
     {
+        public static void printMatch(ChessMatch match)
+        {
+            printBoard(match.board);
+            Console.WriteLine();
+            printCapturedPieces(match);
+
+            Console.WriteLine("Turn: " + match.turn);
+            Console.WriteLine("Waiting play by: " + match.turnPlayer);
+
+           
+        }
+
+        public static void printCapturedPieces(ChessMatch match)
+        {
+            ConsoleColor aux = Console.ForegroundColor;
+            Console.WriteLine("Captured Pieces:");
+
+            Console.Write("White: ");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            printSet(match.capturedPieces(Color.White));
+            Console.ForegroundColor = aux;
+
+            Console.Write("Black: ");
+            Console.ForegroundColor = ConsoleColor.Blue;
+            printSet(match.capturedPieces(Color.Black));
+            Console.ForegroundColor = aux;
+        }
+
+        public static void printSet(HashSet<Piece> set)
+        {
+            Console.Write("[");
+            foreach(Piece x in set)
+            {
+                Console.Write(x + " ");
+            }
+            Console.Write("]\n" );
+        }
+        
         public static void printBoard(Board board)
         {
             for (int i = 0; i < board.rows; i++)

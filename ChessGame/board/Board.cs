@@ -25,7 +25,7 @@ namespace board
             return piecesOnBoard[pos.row, pos.column];
         }
 
-        public void alocatePiece(Piece p, Position pos)
+        public void allocatePiece(Piece p, Position pos)
         {
             if (isThereAPiece(pos))
             {

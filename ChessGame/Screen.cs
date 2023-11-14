@@ -15,6 +15,11 @@ namespace ChessGame
             Console.WriteLine("Turn: " + match.turn);
             Console.WriteLine("Waiting play by: " + match.turnPlayer);
 
+            if (match.xeque)
+            {
+                Console.WriteLine("Xeque!!!");
+            }
+
            
         }
 

@@ -3,6 +3,7 @@ using board;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace chess
 {
@@ -14,6 +15,7 @@ namespace chess
         public bool ended { get; private set; }
         private HashSet<Piece> piecesOnBoard;
         private HashSet<Piece> capturedInGame;
+        public bool xeque { get; private set; }
 
 
         public ChessMatch()
@@ -22,12 +24,13 @@ namespace chess
             turn = 1;
             turnPlayer = Color.White;
             ended = false;
+            xeque = false;
             piecesOnBoard = new HashSet<Piece>();
             capturedInGame = new HashSet<Piece>();
             allocatePieces();
         }
 
-        public void executeMoviment(Position origin, Position destiny)
+        public Piece executeMoviment(Position origin, Position destiny)
         {
             Piece chosed = board.removePiece(origin);
             Piece captured = board.removePiece(destiny);
@@ -37,11 +40,40 @@ namespace chess
             {
                 capturedInGame.Add(captured);
             }
+            return captured;
+        }
+
+        public void undoingMovement(Position origin, Position destiny, Piece captured)
+        {
+            Piece piece = board.removePiece(destiny);
+            piece.decreaseMovements();
+            if (captured != null)
+            {
+                board.allocatePiece(captured, destiny);
+                capturedInGame.Remove(captured);
+            }
+            board.allocatePiece(piece, origin);
         }
 
         public void play(Position origin, Position destiny)
         {
-            executeMoviment(origin, destiny);
+            Piece captured = executeMoviment(origin, destiny);
+
+            if (itIsXeque(turnPlayer))
+            {
+                undoingMovement(origin, destiny, captured);
+                throw new BoardException("You can't put yourself in Xeque !!!");
+            }
+
+            if (itIsXeque(adversary(turnPlayer)))
+            {
+                xeque = true;
+            }
+            else
+            {
+                xeque = false;
+            }
+
             turn++;
             changePlayer();
         }
@@ -72,7 +104,7 @@ namespace chess
 
         private void changePlayer()
         {
-            if(turnPlayer == Color.White)
+            if (turnPlayer == Color.White)
             {
                 turnPlayer = Color.Black;
             }
@@ -85,9 +117,9 @@ namespace chess
         public HashSet<Piece> capturedPieces(Color color)
         {
             HashSet<Piece> aux = new HashSet<Piece>();
-            foreach(Piece x in capturedInGame)
+            foreach (Piece x in capturedInGame)
             {
-                if(x.color == color) aux.Add(x);
+                if (x.color == color) aux.Add(x);
             }
             return aux;
         }
@@ -95,12 +127,56 @@ namespace chess
         public HashSet<Piece> piecesInGame(Color color)
         {
             HashSet<Piece> aux = new HashSet<Piece>();
-            foreach (Piece x in capturedInGame)
+            foreach (Piece x in piecesOnBoard)
             {
-                if (x.color != color) aux.Add(x);
+                if (x.color == color) aux.Add(x);
             }
             aux.ExceptWith(capturedPieces(color));
             return aux;
+        }
+
+        private Color adversary(Color color)
+        {
+            if (color == Color.White)
+            {
+                return Color.Black;
+            }
+            else
+            {
+                return Color.White;
+            }
+        }
+
+
+        private Piece king(Color color)
+        {
+            foreach (Piece x in piecesInGame(color))
+            {
+                if (x is King)
+                {
+                    return x;
+                }
+            }
+            return null;
+        }
+
+        public bool itIsXeque(Color color)
+        {
+            Piece K = king(color);
+            if (K == null)
+            {
+                throw new BoardException("There is no " + color + " king in the board!!");
+            }
+
+            foreach (Piece x in piecesInGame(adversary(color)))
+            {
+                bool[,] mat = x.possibleMovements();
+                if (mat[K.position.row, K.position.column])
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public void allocateNewPiece(char column, int row, Piece piece)
@@ -114,11 +190,11 @@ namespace chess
             allocateNewPiece('a', 8, new Tower(board, Color.Black));
             allocateNewPiece('h', 8, new Tower(board, Color.Black));
             allocateNewPiece('e', 8, new King(board, Color.Black));
-            
+
             allocateNewPiece('a', 1, new Tower(board, Color.White));
             allocateNewPiece('h', 1, new Tower(board, Color.White));
             allocateNewPiece('e', 1, new King(board, Color.White));
-            
+
         }
     }
 }

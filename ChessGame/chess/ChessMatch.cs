@@ -68,14 +68,24 @@ namespace chess
             if (itIsXeque(adversary(turnPlayer)))
             {
                 xeque = true;
+
+                if (itIsMate(adversary(turnPlayer)))
+                {
+                    ended = true;
+                }
+                else
+                {
+                    turn++;
+                    changePlayer();
+                }
             }
             else
             {
                 xeque = false;
+                turn++;
+                changePlayer();
             }
 
-            turn++;
-            changePlayer();
         }
 
         public void validateOrigin(Position origin)
@@ -179,6 +189,39 @@ namespace chess
             return false;
         }
 
+        public bool itIsMate(Color color)
+        {
+            if (!itIsXeque(color))
+            {
+                return false;
+            }
+
+            foreach (Piece x in piecesInGame(color))
+            {
+                bool[,] mat = x.possibleMovements();
+                for (int i = 0; i < board.rows; i++)
+                {
+                    for (int j = 0; j < board.columns; j++)
+                    {
+                        if (mat[i, j])
+                        {
+                            Position destiny = new Position(i,j);
+                            Position origin = x.position;
+
+                            Piece captured = executeMoviment(origin, destiny);
+                            bool xeque = itIsXeque(color);
+                            undoingMovement(origin, destiny, captured);
+                            if (!xeque)
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+
         public void allocateNewPiece(char column, int row, Piece piece)
         {
             board.allocatePiece(piece, new ChessPosition(column, row).toPosition());
@@ -191,7 +234,7 @@ namespace chess
             allocateNewPiece('h', 8, new Tower(board, Color.Black));
             allocateNewPiece('e', 8, new King(board, Color.Black));
 
-            allocateNewPiece('a', 1, new Tower(board, Color.White));
+            allocateNewPiece('a', 7, new Tower(board, Color.White));
             allocateNewPiece('h', 1, new Tower(board, Color.White));
             allocateNewPiece('e', 1, new King(board, Color.White));
 

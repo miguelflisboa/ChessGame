@@ -13,14 +13,21 @@ namespace ChessGame
             printCapturedPieces(match);
 
             Console.WriteLine("Turn: " + match.turn);
-            Console.WriteLine("Waiting play by: " + match.turnPlayer);
 
-            if (match.xeque)
+            if (!match.ended)
             {
-                Console.WriteLine("Xeque!!!");
+                Console.WriteLine("Waiting play by: " + match.turnPlayer);
+                if (match.xeque)
+                {
+                    Console.WriteLine("Xeque!!!");
+                }
             }
-
-           
+            else
+            {
+                Console.WriteLine("XEQUEMATE!");
+                Console.WriteLine("Winner: " + match.turnPlayer);
+            }
+  
         }
 
         public static void printCapturedPieces(ChessMatch match)

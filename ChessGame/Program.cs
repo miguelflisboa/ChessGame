@@ -46,11 +46,11 @@ namespace ChessGame
                         Console.ReadLine();
                     }
                     
-                    
+                    Console.Clear();
+                    Screen.printMatch(match);
+
 
                 }
-
-                Screen.printBoard(match.board);
 
             }
             catch (BoardException e)

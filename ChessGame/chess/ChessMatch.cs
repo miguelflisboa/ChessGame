@@ -40,6 +40,27 @@ namespace chess
             {
                 capturedInGame.Add(captured);
             }
+
+            // Small Roque
+            if (chosed is King && destiny.column == origin.column + 2)
+            {
+                Position originTr = new Position(origin.row, origin.column + 3);
+                Position destinyTr = new Position(origin.row, origin.column + 1);
+                Piece Tr = board.removePiece(originTr);
+                board.allocatePiece(Tr, destinyTr);
+                Tr.increaseMovements();
+            }
+
+            // Big Roque
+            if (chosed is King && destiny.column == origin.column - 2)
+            {
+                Position originTl = new Position(origin.row, origin.column - 4);
+                Position destinyTl = new Position(origin.row, origin.column - 2);
+                Piece Tl = board.removePiece(originTl);
+                board.allocatePiece(Tl, destinyTl);
+                Tl.increaseMovements();
+            }
+
             return captured;
         }
 
@@ -53,6 +74,26 @@ namespace chess
                 capturedInGame.Remove(captured);
             }
             board.allocatePiece(piece, origin);
+
+            // Small Roque
+            if (piece is King && destiny.column == origin.column + 2)
+            {
+                Position originTr = new Position(origin.row, origin.column + 3);
+                Position destinyTr = new Position(origin.row, origin.column + 1);
+                Piece Tr = board.removePiece(destinyTr);
+                board.allocatePiece(Tr, originTr);
+                Tr.decreaseMovements();
+            }
+
+            // Big Roque
+            if (piece is King && destiny.column == origin.column - 2)
+            {
+                Position originTl = new Position(origin.row, origin.column - 4);
+                Position destinyTl = new Position(origin.row, origin.column - 1);
+                Piece Tl = board.removePiece(destinyTl);
+                board.allocatePiece(Tl, originTl);
+                Tl.decreaseMovements();
+            }
         }
 
         public void play(Position origin, Position destiny)
@@ -234,7 +275,7 @@ namespace chess
             allocateNewPiece('b', 8, new Knight(board, Color.Black));
             allocateNewPiece('c', 8, new Bishop(board, Color.Black));
             allocateNewPiece('d', 8, new Queen(board, Color.Black));
-            allocateNewPiece('e', 8, new King(board, Color.Black));
+            allocateNewPiece('e', 8, new King(board, Color.Black, this));
             allocateNewPiece('f', 8, new Bishop(board, Color.Black));
             allocateNewPiece('g', 8, new Knight(board, Color.Black));
             allocateNewPiece('h', 8, new Tower(board, Color.Black));
@@ -253,7 +294,7 @@ namespace chess
             allocateNewPiece('b', 1, new Knight(board, Color.White));
             allocateNewPiece('c', 1, new Bishop(board, Color.White));
             allocateNewPiece('d', 1, new Queen(board, Color.White));
-            allocateNewPiece('e', 1, new King(board, Color.White));
+            allocateNewPiece('e', 1, new King(board, Color.White, this));
             allocateNewPiece('f', 1, new Bishop(board, Color.White));
             allocateNewPiece('g', 1, new Knight(board, Color.White));
             allocateNewPiece('h', 1, new Tower(board, Color.White));

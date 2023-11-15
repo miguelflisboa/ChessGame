@@ -231,12 +231,42 @@ namespace chess
         private void allocatePieces()
         {
             allocateNewPiece('a', 8, new Tower(board, Color.Black));
-            allocateNewPiece('h', 8, new Tower(board, Color.Black));
+            allocateNewPiece('b', 8, new Knight(board, Color.Black));
+            allocateNewPiece('c', 8, new Bishop(board, Color.Black));
+            allocateNewPiece('d', 8, new Queen(board, Color.Black));
             allocateNewPiece('e', 8, new King(board, Color.Black));
+            allocateNewPiece('f', 8, new Bishop(board, Color.Black));
+            allocateNewPiece('g', 8, new Knight(board, Color.Black));
+            allocateNewPiece('h', 8, new Tower(board, Color.Black));
 
-            allocateNewPiece('a', 7, new Tower(board, Color.White));
-            allocateNewPiece('h', 1, new Tower(board, Color.White));
+            allocateNewPiece('a', 7, new Pawn(board, Color.Black));
+            allocateNewPiece('b', 7, new Pawn(board, Color.Black));
+            allocateNewPiece('c', 7, new Pawn(board, Color.Black));
+            allocateNewPiece('d', 7, new Pawn(board, Color.Black));
+            allocateNewPiece('e', 7, new Pawn(board, Color.Black));
+            allocateNewPiece('f', 7, new Pawn(board, Color.Black));
+            allocateNewPiece('g', 7, new Pawn(board, Color.Black));
+            allocateNewPiece('h', 7, new Pawn(board, Color.Black));
+
+
+            allocateNewPiece('a', 1, new Tower(board, Color.White));
+            allocateNewPiece('b', 1, new Knight(board, Color.White));
+            allocateNewPiece('c', 1, new Bishop(board, Color.White));
+            allocateNewPiece('d', 1, new Queen(board, Color.White));
             allocateNewPiece('e', 1, new King(board, Color.White));
+            allocateNewPiece('f', 1, new Bishop(board, Color.White));
+            allocateNewPiece('g', 1, new Knight(board, Color.White));
+            allocateNewPiece('h', 1, new Tower(board, Color.White));
+
+            allocateNewPiece('a', 2, new Pawn(board, Color.White));
+            allocateNewPiece('b', 2, new Pawn(board, Color.White));
+            allocateNewPiece('c', 2, new Pawn(board, Color.White));
+            allocateNewPiece('d', 2, new Pawn(board, Color.White));
+            allocateNewPiece('e', 2, new Pawn(board, Color.White));
+            allocateNewPiece('f', 2, new Pawn(board, Color.White));
+            allocateNewPiece('g', 2, new Pawn(board, Color.White));
+            allocateNewPiece('h', 2, new Pawn(board, Color.White));
+
 
         }
     }
